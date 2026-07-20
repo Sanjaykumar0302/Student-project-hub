@@ -1,0 +1,39 @@
+{% extends "layouts/base.html" %}
+{% from "layouts/macros.html" import field_errors %}
+{% block title %}Edit Profile - StudentProjectHub{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+  {% include "layouts/sidebar.html" %}
+
+  <div class="dashboard-main">
+    <h3 class="mb-4">Edit Profile</h3>
+
+    <div class="card-surface p-4" style="max-width: 520px;">
+      <form method="POST" enctype="multipart/form-data" data-validate novalidate>
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+          {{ form.name.label(class="form-label") }}
+          {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else ""), required=true) }}
+          {{ field_errors(form.name) }}
+        </div>
+        <div class="mb-3">
+          {{ form.phone.label(class="form-label") }}
+          {{ form.phone(class="form-control" + (" is-invalid" if form.phone.errors else "")) }}
+          {{ field_errors(form.phone) }}
+        </div>
+        <div class="mb-3">
+          {{ form.college.label(class="form-label") }}
+          {{ form.college(class="form-control") }}
+        </div>
+        <div class="mb-3">
+          {{ form.avatar.label(class="form-label") }}
+          {{ form.avatar(class="form-control" + (" is-invalid" if form.avatar.errors else "")) }}
+          {{ field_errors(form.avatar) }}
+        </div>
+        {{ form.submit(class="btn btn-brand w-100") }}
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

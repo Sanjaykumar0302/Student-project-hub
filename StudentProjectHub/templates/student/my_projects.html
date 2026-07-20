@@ -1,0 +1,42 @@
+{% extends "layouts/base.html" %}
+{% block title %}My Projects - StudentProjectHub{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+  {% include "layouts/sidebar.html" %}
+
+  <div class="dashboard-main">
+    <div class="dashboard-header">
+      <h3 class="mb-0">My Projects</h3>
+      <a href="{{ url_for('project.submit') }}" class="btn btn-brand">+ Submit New Project</a>
+    </div>
+
+    {% if projects %}
+    <table class="data-table">
+      <thead>
+        <tr><th>Title</th><th>Type</th><th>Package</th><th>Price</th><th>Status</th><th>Submitted</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for p in projects %}
+        <tr>
+          <td class="fw-semibold">{{ p.title }}</td>
+          <td>{{ p.project_type }}</td>
+          <td>{{ p.package.name }}</td>
+          <td>{{ p.price | currency }}</td>
+          <td><span class="status-badge {{ p.status_badge_class() }}">{{ p.status }}</span></td>
+          <td>{{ p.created_at | date }}</td>
+          <td><a href="{{ url_for('project.details', project_id=p.id) }}">View →</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+      <div class="empty-icon">📁</div>
+      <p>No projects yet.</p>
+      <a href="{{ url_for('project.submit') }}" class="btn btn-brand">Submit Your First Project</a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

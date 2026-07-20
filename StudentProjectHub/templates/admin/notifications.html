@@ -1,0 +1,41 @@
+{% extends "layouts/base.html" %}
+{% block title %}Notifications - Admin{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+  {% include "layouts/sidebar.html" %}
+
+  <div class="dashboard-main">
+    <div class="dashboard-header">
+      <h3 class="mb-0">Notifications <span class="admin-flag">Admin</span></h3>
+      {% if notifications %}
+      <form method="POST" action="{{ url_for('notification.mark_all') }}">
+        <button type="submit" class="btn btn-outline-navy btn-sm">Mark all as read</button>
+      </form>
+      {% endif %}
+    </div>
+
+    <div class="card-surface">
+      {% if notifications %}
+        {% for n in notifications %}
+        <div class="notif-item {{ 'unread' if not n.is_read }}">
+          {% if not n.is_read %}<div class="notif-dot"></div>{% else %}<div style="width:8px;"></div>{% endif %}
+          <div class="flex-grow-1">
+            <div>{{ n.message }}</div>
+            <div class="text-muted-custom" style="font-size:0.78rem;">{{ n.created_at | datetime }}</div>
+          </div>
+          {% if n.link %}
+          <a href="{{ n.link }}" class="align-self-center" style="font-size:0.85rem;">View →</a>
+          {% endif %}
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-state">
+          <div class="empty-icon">🔔</div>
+          <p>No notifications yet. New project requests will show up here.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

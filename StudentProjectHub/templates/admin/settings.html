@@ -1,0 +1,87 @@
+{% extends "layouts/base.html" %}
+{% block title %}Settings - Admin{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+  {% include "layouts/sidebar.html" %}
+
+  <div class="dashboard-main">
+    <div class="dashboard-header">
+      <h3 class="mb-0">Settings <span class="admin-flag">Admin</span></h3>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-5">
+        <div class="card-surface p-4 mb-4">
+          <h6 class="section-title-eyebrow">Account</h6>
+          <dl class="row mt-3 mb-0">
+            <dt class="col-sm-4 text-muted-custom">Name</dt>
+            <dd class="col-sm-8">{{ current_user.name }}</dd>
+            <dt class="col-sm-4 text-muted-custom">Email</dt>
+            <dd class="col-sm-8">{{ current_user.email }}</dd>
+            <dt class="col-sm-4 text-muted-custom">Role</dt>
+            <dd class="col-sm-8"><span class="admin-flag">Admin</span></dd>
+          </dl>
+          <a href="{{ url_for('profile.edit') }}" class="btn btn-outline-navy btn-sm mt-3">Edit Profile</a>
+        </div>
+
+        <div class="card-surface p-4">
+          <h6 class="section-title-eyebrow">Add a Package Tier</h6>
+          <form method="POST" action="{{ url_for('package.create') }}" class="mt-3">
+            <div class="mb-2">
+              <label class="form-label">Name</label>
+              <input type="text" name="name" class="form-control" required>
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Price (₹)</label>
+              <input type="number" name="price" class="form-control" min="0" required>
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Short Description</label>
+              <input type="text" name="description" class="form-control">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Features (one per line)</label>
+              <textarea name="features" class="form-control" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-brand w-100">Add Package</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="col-lg-7">
+        <h6 class="section-title-eyebrow mb-3">Existing Packages</h6>
+        {% if packages %}
+          {% for pkg in packages %}
+          <div class="card-surface p-4 mb-3">
+            <form method="POST" action="{{ url_for('package.update', package_id=pkg.id) }}">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <div class="d-flex align-items-center gap-2">
+                  <input type="text" name="name" value="{{ pkg.name }}" class="form-control form-control-sm" style="width:160px; display:inline-block;">
+                  {% if not pkg.is_active %}<span class="status-badge badge-rejected">Hidden</span>{% endif %}
+                </div>
+                <span class="fw-semibold">₹<input type="number" name="price" value="{{ pkg.price }}" class="form-control form-control-sm d-inline-block" style="width:100px;"></span>
+              </div>
+              <input type="text" name="description" value="{{ pkg.description or '' }}" class="form-control form-control-sm mb-2" placeholder="Short description">
+              <textarea name="features" class="form-control form-control-sm mb-2" rows="3" placeholder="One feature per line">{{ pkg.features or '' }}</textarea>
+              <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-outline-navy btn-sm">Save Changes</button>
+              </div>
+            </form>
+            <form method="POST" action="{{ url_for('package.toggle', package_id=pkg.id) }}" class="mt-2">
+              <button type="submit" class="btn btn-sm {{ 'btn-outline-navy' if pkg.is_active else 'btn-brand' }}">
+                {{ 'Hide from Packages Page' if pkg.is_active else 'Make Active' }}
+              </button>
+            </form>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div class="empty-state">
+            <p>No packages yet. Add one to get started - run <code>python seed.py</code> for sensible defaults.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

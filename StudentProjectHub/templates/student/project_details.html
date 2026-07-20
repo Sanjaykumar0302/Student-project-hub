@@ -1,0 +1,99 @@
+{% extends "layouts/base.html" %}
+{% block title %}{{ project.title }} - StudentProjectHub{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+  {% include "layouts/sidebar.html" %}
+
+  <div class="dashboard-main">
+    <div class="dashboard-header">
+      <div>
+        <h3 class="mb-1">{{ project.title }}</h3>
+        <span class="status-badge {{ project.status_badge_class() }}">{{ project.status }}</span>
+      </div>
+      <a href="{{ url_for('project.my_projects') }}">← Back to My Projects</a>
+    </div>
+
+    {% if project.status != "Rejected" %}
+    <div class="progress-track">
+      {% for step in ["Pending", "Accepted", "Working", "Completed", "Delivered"] %}
+        {% set order = ["Pending", "Accepted", "Working", "Completed", "Delivered"] %}
+        {% set current_idx = order.index(project.status) %}
+        {% set step_idx = order.index(step) %}
+        <div class="progress-step {{ 'done' if step_idx < current_idx else ('current' if step_idx == current_idx else '') }}">
+          <div class="dot">{{ loop.index }}</div>
+          <div class="label">{{ step }}</div>
+        </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="row g-4">
+      <div class="col-lg-7">
+        <div class="card-surface p-4 mb-4">
+          <h6 class="section-title-eyebrow">Details</h6>
+          <p class="mt-2 mb-3">{{ project.description }}</p>
+          <dl class="row mb-0">
+            <dt class="col-sm-4 text-muted-custom">Type</dt>
+            <dd class="col-sm-8">{{ project.project_type }}</dd>
+            <dt class="col-sm-4 text-muted-custom">Package</dt>
+            <dd class="col-sm-8">{{ project.package.name }} ({{ project.price | currency }})</dd>
+            <dt class="col-sm-4 text-muted-custom">Deadline</dt>
+            <dd class="col-sm-8">{{ project.deadline | date if project.deadline else "Not specified" }}</dd>
+            <dt class="col-sm-4 text-muted-custom">Submitted</dt>
+            <dd class="col-sm-8">{{ project.created_at | datetime }}</dd>
+          </dl>
+        </div>
+
+        {% set req_files = project.files | selectattr("file_type", "equalto", "requirement") | list %}
+        {% if req_files %}
+        <div class="card-surface p-4">
+          <h6 class="section-title-eyebrow">Your Attachments</h6>
+          <ul class="list-unstyled mt-3 mb-0">
+            {% for f in req_files %}
+            <li class="mb-2">
+              📎 <a href="{{ url_for('project.download_file', project_id=project.id, file_id=f.id) }}">{{ f.original_filename }}</a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="col-lg-5">
+        <div class="card-surface p-4">
+          <h6 class="section-title-eyebrow">Deliverables</h6>
+          {% set completed_files = project.files | selectattr("file_type", "equalto", "completed") | list %}
+
+          {% if project.status in ["Completed", "Delivered"] %}
+            {% if project.is_paid() %}
+              {% if completed_files %}
+              <ul class="list-unstyled mt-3 mb-0">
+                {% for f in completed_files %}
+                <li class="mb-2">
+                  📥 <a href="{{ url_for('project.download_file', project_id=project.id, file_id=f.id) }}">{{ f.original_filename }}</a>
+                </li>
+                {% endfor %}
+              </ul>
+              {% else %}
+              <p class="text-muted-custom mt-2 mb-0">Payment confirmed - files will appear here once uploaded.</p>
+              {% endif %}
+            {% else %}
+              <p class="text-muted-custom mt-2">Your project is ready. Complete payment to unlock your files.</p>
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="fw-semibold">Amount Due</span>
+                <span class="package-price" style="font-size:1.5rem;">{{ project.price | currency }}</span>
+              </div>
+              <form method="POST" action="{{ url_for('project.checkout', project_id=project.id) }}">
+                <button type="submit" class="btn btn-brand w-100">Pay & Unlock Files</button>
+              </form>
+            {% endif %}
+          {% else %}
+            <p class="text-muted-custom mt-2 mb-0">Deliverables will appear here once your project reaches the Completed stage.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

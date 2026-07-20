@@ -1,0 +1,84 @@
+{% extends "layouts/base.html" %}
+{% block title %}Analytics - Admin{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+  {% include "layouts/sidebar.html" %}
+
+  <div class="dashboard-main">
+    <div class="dashboard-header">
+      <div>
+        <h3 class="mb-0">Analytics <span class="admin-flag">Admin</span></h3>
+        <p class="text-muted-custom mb-0">How requests are trending across the platform.</p>
+      </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-lg-3">
+        <div class="stat-card">
+          <div class="stat-value">{{ stats.total_projects }}</div>
+          <div class="stat-label">Total Requests</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card">
+          <div class="stat-value">{{ stats.total_students }}</div>
+          <div class="stat-label">Registered Students</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card">
+          <div class="stat-value">{{ stats.completed }}</div>
+          <div class="stat-label">Completed</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card">
+          <div class="stat-value">{{ stats.revenue | currency }}</div>
+          <div class="stat-label">Total Revenue</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-6">
+        <div class="chart-card">
+          <h6 class="section-title-eyebrow mb-3">Requests by Status</h6>
+          {% if by_status %}
+          <canvas id="statusChart" height="220"></canvas>
+          {% else %}
+          <div class="empty-state"><p class="mb-0">No data yet.</p></div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="chart-card">
+          <h6 class="section-title-eyebrow mb-3">Requests by Project Type</h6>
+          {% if by_type %}
+          <canvas id="typeChart" height="220"></canvas>
+          {% else %}
+          <div class="empty-state"><p class="mb-0">No data yet.</p></div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+<script>
+  renderStatusChart(
+    "statusChart",
+    {{ by_status.keys() | list | tojson }},
+    {{ by_status.values() | list | tojson }}
+  );
+  renderTypeChart(
+    "typeChart",
+    {{ by_type.keys() | list | tojson }},
+    {{ by_type.values() | list | tojson }}
+  );
+</script>
+{% endblock %}

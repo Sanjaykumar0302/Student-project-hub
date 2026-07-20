@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.env
+instance/*.db
+database/*.db
+uploads/requirements/project_*/
+uploads/completed/project_*/
+static/uploads/profile/*
+!static/uploads/profile/.gitkeep
+logs/*.log
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.DS_Store

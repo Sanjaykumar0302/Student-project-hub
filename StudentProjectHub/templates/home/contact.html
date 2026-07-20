@@ -1,0 +1,36 @@
+{% extends "layouts/base.html" %}
+{% from "layouts/macros.html" import field_errors %}
+{% block title %}Contact - StudentProjectHub{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container" style="max-width: 560px;">
+    <div class="text-center mb-4">
+      <div class="section-title-eyebrow">Get in touch</div>
+      <h2 class="mt-2">Have a question before you submit?</h2>
+    </div>
+
+    <div class="card-surface p-4">
+      <form method="POST" data-validate novalidate>
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+          {{ form.name.label(class="form-label") }}
+          {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else ""), required=true) }}
+          {{ field_errors(form.name) }}
+        </div>
+        <div class="mb-3">
+          {{ form.email.label(class="form-label") }}
+          {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else ""), required=true) }}
+          {{ field_errors(form.email) }}
+        </div>
+        <div class="mb-3">
+          {{ form.message.label(class="form-label") }}
+          {{ form.message(class="form-control" + (" is-invalid" if form.message.errors else ""), rows=4, required=true) }}
+          {{ field_errors(form.message) }}
+        </div>
+        {{ form.submit(class="btn btn-brand w-100") }}
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

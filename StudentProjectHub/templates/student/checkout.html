@@ -1,0 +1,76 @@
+{% extends "layouts/base.html" %}
+{% block title %}Checkout - StudentProjectHub{% endblock %}
+
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-eyebrow">Checkout</div>
+    <h2>{{ project.title }}</h2>
+    <p class="text-muted-custom">Amount due: <strong>{{ project.price | currency }}</strong></p>
+
+    {% if order %}
+      <button id="payBtn" class="btn btn-brand w-100 mt-3">Pay with Razorpay</button>
+      <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+      <script>
+        document.getElementById("payBtn").addEventListener("click", function () {
+          const options = {
+            key: "{{ razorpay_key_id }}",
+            amount: "{{ order.amount }}",
+            currency: "{{ order.currency }}",
+            name: "StudentProjectHub",
+            description: "{{ project.title }}",
+            order_id: "{{ order.id }}",
+            handler: function (response) {
+              const form = document.createElement("form");
+              form.method = "POST";
+              form.action = "{{ url_for('project.confirm_payment', project_id=project.id) }}";
+              ["razorpay_payment_id", "razorpay_order_id", "razorpay_signature"].forEach((key) => {
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = key;
+                input.value = response[key];
+                form.appendChild(input);
+              });
+              document.body.appendChild(form);
+
+              fetch(form.action, { method: "POST", body: new FormData(form) })
+                .then((res) => res.json())
+                .then((data) => {
+                  if (data.ok) window.location.href = data.redirect;
+                  else alert(data.message || "Payment verification failed.");
+                });
+            },
+            theme: { color: "#202A52" },
+          };
+          const rzp = new Razorpay(options);
+          rzp.open();
+        });
+      </script>
+    {% else %}
+      <div class="alert alert-warning mt-3">
+        Razorpay isn't configured with live keys yet - this simulates a successful payment for demo purposes.
+      </div>
+      <button id="simulateBtn" class="btn btn-brand w-100">Simulate Successful Payment</button>
+      <script>
+        document.getElementById("simulateBtn").addEventListener("click", function () {
+          const data = new FormData();
+          data.append("razorpay_order_id", "order_simulated_{{ project.id }}");
+          data.append("razorpay_payment_id", "pay_simulated_{{ project.id }}");
+          data.append("razorpay_signature", "");
+
+          fetch("{{ url_for('project.confirm_payment', project_id=project.id) }}", { method: "POST", body: data })
+            .then((res) => res.json())
+            .then((result) => {
+              if (result.ok) window.location.href = result.redirect;
+              else alert(result.message || "Payment could not be confirmed.");
+            });
+        });
+      </script>
+    {% endif %}
+
+    <div class="auth-footer-link">
+      <a href="{{ url_for('project.details', project_id=project.id) }}">← Back to project</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

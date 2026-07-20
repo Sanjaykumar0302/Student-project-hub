@@ -1,0 +1,76 @@
+{% extends "layouts/base.html" %}
+{% block title %}Dashboard - StudentProjectHub{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+  {% include "layouts/sidebar.html" %}
+
+  <div class="dashboard-main">
+    <div class="dashboard-header">
+      <div>
+        <h3 class="mb-0">Welcome back, {{ current_user.name.split(' ')[0] }}</h3>
+        <p class="text-muted-custom mb-0">Here's where your projects stand.</p>
+      </div>
+      <a href="{{ url_for('project.submit') }}" class="btn btn-brand">+ Submit New Project</a>
+    </div>
+
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-lg-3">
+        <div class="stat-card">
+          <div class="stat-icon" style="background: rgba(32,42,82,0.08); color: var(--navy);">📁</div>
+          <div class="stat-value">{{ counts.total }}</div>
+          <div class="stat-label">Total Projects</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card">
+          <div class="stat-icon" style="background: #FCEED3; color: #8A5A0C;">⏳</div>
+          <div class="stat-value">{{ counts.pending }}</div>
+          <div class="stat-label">Pending Review</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card">
+          <div class="stat-icon" style="background: #E3DDFB; color: #5B33C4;">⚙️</div>
+          <div class="stat-value">{{ counts.in_progress }}</div>
+          <div class="stat-label">In Progress</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card">
+          <div class="stat-icon" style="background: #D8F0E1; color: #1C7A48;">✅</div>
+          <div class="stat-value">{{ counts.completed }}</div>
+          <div class="stat-label">Completed</div>
+        </div>
+      </div>
+    </div>
+
+    <h5 class="mb-3">Recent Projects</h5>
+    {% if recent_projects %}
+    <table class="data-table">
+      <thead>
+        <tr><th>Title</th><th>Type</th><th>Package</th><th>Status</th><th>Submitted</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for p in recent_projects %}
+        <tr>
+          <td class="fw-semibold">{{ p.title }}</td>
+          <td>{{ p.project_type }}</td>
+          <td>{{ p.package.name }}</td>
+          <td><span class="status-badge {{ p.status_badge_class() }}">{{ p.status }}</span></td>
+          <td>{{ p.created_at | date }}</td>
+          <td><a href="{{ url_for('project.details', project_id=p.id) }}">View →</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+      <div class="empty-icon">📁</div>
+      <p>You haven't submitted any projects yet.</p>
+      <a href="{{ url_for('project.submit') }}" class="btn btn-brand">Submit Your First Project</a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

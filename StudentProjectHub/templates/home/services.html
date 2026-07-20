@@ -1,0 +1,40 @@
+{% extends "layouts/base.html" %}
+{% block title %}Services - StudentProjectHub{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="text-center mb-5">
+      <div class="section-title-eyebrow">What we build</div>
+      <h2 class="mt-2">Project types we cover</h2>
+      <p class="text-muted-custom">Pick your stack when you submit a request - we'll match it to the right approach.</p>
+    </div>
+
+    <div class="row g-4">
+      {% for name, icon, desc in [
+        ("Python", "🐍", "Scripts, automation tools, CLI apps, and data-driven projects."),
+        ("Java", "☕", "Desktop apps, Swing/JavaFX UIs, and OOP-heavy coursework."),
+        ("PHP", "🌐", "Dynamic websites and MySQL-backed web applications."),
+        ("React", "⚛️", "Modern single-page frontends with component-driven UI."),
+        ("Flask", "🧪", "Lightweight Python web apps and REST APIs."),
+        ("AI", "🤖", "Rule-based and model-driven intelligent systems."),
+        ("Machine Learning", "📊", "Classification, regression, and predictive models."),
+        ("Data Science", "📈", "Data cleaning, analysis, and visualization projects."),
+        ("Android", "📱", "Native Android apps built with Java or Kotlin."),
+      ] %}
+      <div class="col-md-4">
+        <div class="card-surface p-4 h-100">
+          <div class="feature-icon">{{ icon }}</div>
+          <h5>{{ name }}</h5>
+          <p class="text-muted-custom mb-0">{{ desc }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="text-center mt-5">
+      <a href="{{ url_for('auth.register') }}" class="btn btn-brand btn-lg">Submit Your Project</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

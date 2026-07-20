@@ -1,0 +1,44 @@
+<nav class="site-navbar">
+  <div class="container d-flex align-items-center justify-content-between">
+    <a class="brand" href="{{ url_for('home.index') }}">Student<span>ProjectHub</span></a>
+
+    <button class="navbar-toggler d-lg-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse d-lg-flex justify-content-lg-end" id="mainNav">
+      <ul class="navbar-nav d-lg-flex flex-row align-items-lg-center gap-lg-2 mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('home.services') }}">Services</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('home.packages') }}">Packages</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('home.about') }}">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('home.faq') }}">FAQ</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('home.contact') }}">Contact</a></li>
+
+        {% if current_user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link bell-btn" href="{{ url_for('admin.notifications' if current_user.is_admin else 'student.notifications') }}">
+              🔔
+              <span class="bell-dot" data-unread-count style="{{ '' if nav_unread_count else 'display:none;' }}">{{ nav_unread_count if nav_unread_count <= 9 else '9+' }}</span>
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+              {{ current_user.name.split(' ')[0] }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="{{ url_for('admin.dashboard' if current_user.is_admin else 'student.dashboard') }}">Dashboard</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('profile.edit') }}">Edit Profile</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Log Out</a></li>
+            </ul>
+          </li>
+        {% else %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">Log In</a></li>
+          <li class="nav-item ms-lg-2">
+            <a class="btn btn-brand btn-sm" href="{{ url_for('auth.register') }}">Get Started</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>

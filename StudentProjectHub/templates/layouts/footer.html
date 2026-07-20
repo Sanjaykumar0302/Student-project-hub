@@ -1,0 +1,34 @@
+<footer class="site-footer">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-md-4">
+        <h6>Student<span style="color: var(--amber);">ProjectHub</span></h6>
+        <p class="mt-2" style="font-size: 0.92rem;">Custom-built academic and college projects, delivered by hand, on your timeline.</p>
+      </div>
+      <div class="col-md-2">
+        <h6>Explore</h6>
+        <ul class="list-unstyled mt-2">
+          <li class="mb-2"><a href="{{ url_for('home.services') }}">Services</a></li>
+          <li class="mb-2"><a href="{{ url_for('home.packages') }}">Packages</a></li>
+          <li class="mb-2"><a href="{{ url_for('home.reviews') }}">Reviews</a></li>
+        </ul>
+      </div>
+      <div class="col-md-2">
+        <h6>Company</h6>
+        <ul class="list-unstyled mt-2">
+          <li class="mb-2"><a href="{{ url_for('home.about') }}">About</a></li>
+          <li class="mb-2"><a href="{{ url_for('home.faq') }}">FAQ</a></li>
+          <li class="mb-2"><a href="{{ url_for('home.contact') }}">Contact</a></li>
+        </ul>
+      </div>
+      <div class="col-md-4">
+        <h6>Get Started</h6>
+        <p class="mt-2" style="font-size: 0.92rem;">Create an account and submit your project requirements in minutes.</p>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-brand btn-sm mt-1">Get Started</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      &copy; {{ now().year }} StudentProjectHub. Built for demonstration purposes.
+    </div>
+  </div>
+</footer>

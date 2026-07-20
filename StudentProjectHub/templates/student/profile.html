@@ -1,0 +1,37 @@
+{% extends "layouts/base.html" %}
+{% block title %}My Profile - StudentProjectHub{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+  {% include "layouts/sidebar.html" %}
+
+  <div class="dashboard-main">
+    <div class="dashboard-header">
+      <h3 class="mb-0">My Profile</h3>
+      <a href="{{ url_for('profile.edit') }}" class="btn btn-outline-navy">Edit Profile</a>
+    </div>
+
+    <div class="card-surface p-4" style="max-width: 520px;">
+      <div class="d-flex align-items-center gap-3 mb-4">
+        {% if current_user.avatar %}
+          <img src="{{ current_user.avatar }}" alt="Avatar" style="width:64px;height:64px;border-radius:50%;object-fit:cover;">
+        {% else %}
+          <div class="feature-icon" style="border-radius:50%; width:64px; height:64px;">👤</div>
+        {% endif %}
+        <div>
+          <h5 class="mb-0">{{ current_user.name }}</h5>
+          <span class="text-muted-custom">{{ current_user.email }}</span>
+        </div>
+      </div>
+      <dl class="row mb-0">
+        <dt class="col-sm-4 text-muted-custom">Phone</dt>
+        <dd class="col-sm-8">{{ current_user.phone or "-" }}</dd>
+        <dt class="col-sm-4 text-muted-custom">College</dt>
+        <dd class="col-sm-8">{{ current_user.college or "-" }}</dd>
+        <dt class="col-sm-4 text-muted-custom">Member Since</dt>
+        <dd class="col-sm-8">{{ current_user.created_at | date }}</dd>
+      </dl>
+    </div>
+  </div>
+</div>
+{% endblock %}

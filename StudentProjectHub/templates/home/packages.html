@@ -1,0 +1,38 @@
+{% extends "layouts/base.html" %}
+{% block title %}Packages - StudentProjectHub{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="text-center mb-5">
+      <div class="section-title-eyebrow">Pricing</div>
+      <h2 class="mt-2">Choose the package that fits your submission</h2>
+    </div>
+
+    {% if packages %}
+    <div class="row g-4 justify-content-center">
+      {% for package in packages %}
+      <div class="col-md-5">
+        <div class="package-card {{ 'featured' if loop.index == 2 }}">
+          <h4>{{ package.name }}</h4>
+          <p class="text-muted-custom">{{ package.description }}</p>
+          <div class="package-price">₹{{ package.price }}</div>
+          <ul>
+            {% for feature in package.feature_list() %}
+              <li>{{ feature }}</li>
+            {% endfor %}
+          </ul>
+          <a href="{{ url_for('auth.register') }}" class="btn btn-navy w-100">Choose {{ package.name }}</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <div class="empty-icon">📦</div>
+      <p>Packages haven't been set up yet. Run <code>python seed.py</code> to create the defaults.</p>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

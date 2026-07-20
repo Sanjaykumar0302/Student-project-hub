@@ -1,0 +1,79 @@
+{% extends "layouts/base.html" %}
+{% block title %}Admin Dashboard - StudentProjectHub{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+  {% include "layouts/sidebar.html" %}
+
+  <div class="dashboard-main">
+    <div class="dashboard-header">
+      <div>
+        <h3 class="mb-0">Admin Dashboard <span class="admin-flag">Admin</span></h3>
+        <p class="text-muted-custom mb-0">Overview of all activity on the platform.</p>
+      </div>
+      <a href="{{ url_for('admin.projects') }}" class="btn btn-brand">Manage Projects</a>
+    </div>
+
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-lg-3">
+        <div class="stat-card">
+          <div class="stat-icon" style="background: rgba(32,42,82,0.08); color: var(--navy);">🎓</div>
+          <div class="stat-value">{{ stats.total_students }}</div>
+          <div class="stat-label">Students</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card">
+          <div class="stat-icon" style="background: #FCEED3; color: #8A5A0C;">⏳</div>
+          <div class="stat-value">{{ stats.pending }}</div>
+          <div class="stat-label">Pending Requests</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card">
+          <div class="stat-icon" style="background: #E3DDFB; color: #5B33C4;">⚙️</div>
+          <div class="stat-value">{{ stats.in_progress }}</div>
+          <div class="stat-label">In Progress</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card">
+          <div class="stat-icon" style="background: #D8F0E1; color: #1C7A48;">💰</div>
+          <div class="stat-value">{{ stats.revenue | currency }}</div>
+          <div class="stat-label">Total Revenue</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="mb-0">Recent Requests</h5>
+      <a href="{{ url_for('admin.projects') }}" style="font-size:0.9rem;">View all →</a>
+    </div>
+
+    {% if recent_projects %}
+    <table class="data-table">
+      <thead>
+        <tr><th>Title</th><th>Student</th><th>Type</th><th>Status</th><th>Submitted</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for p in recent_projects %}
+        <tr>
+          <td class="fw-semibold">{{ p.title }}</td>
+          <td>{{ p.student.name }}</td>
+          <td>{{ p.project_type }}</td>
+          <td><span class="status-badge {{ p.status_badge_class() }}">{{ p.status }}</span></td>
+          <td>{{ p.created_at | date }}</td>
+          <td><a href="{{ url_for('project.details', project_id=p.id) }}">Review →</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+      <div class="empty-icon">📁</div>
+      <p>No project requests yet.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

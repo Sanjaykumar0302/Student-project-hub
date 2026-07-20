@@ -1,0 +1,30 @@
+{% extends "layouts/base.html" %}
+{% block title %}Reviews - StudentProjectHub{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="text-center mb-5">
+      <div class="section-title-eyebrow">Reviews</div>
+      <h2 class="mt-2">What students say</h2>
+      <p class="text-muted-custom">Illustrative examples for this demo build.</p>
+    </div>
+
+    <div class="row g-4">
+      {% for name, course, quote in [
+        ("A. Sharma", "B.Tech CSE", "The status tracking meant I always knew where my project stood - no back-and-forth emails needed."),
+        ("R. Fernandes", "BCA", "Having the report and PPT bundled with the code saved me a stressful last week before submission."),
+        ("K. Iyer", "M.Sc Data Science", "Clear pricing, clear stages, and the notes from admin helped me actually understand my own project for the viva."),
+      ] %}
+      <div class="col-md-4">
+        <div class="card-surface p-4 h-100">
+          <p class="mb-3">"{{ quote }}"</p>
+          <div class="fw-semibold">{{ name }}</div>
+          <div class="text-muted-custom" style="font-size: 0.85rem;">{{ course }}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

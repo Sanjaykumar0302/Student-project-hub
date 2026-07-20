@@ -1,0 +1,56 @@
+.upload-drop {
+  border: 2px dashed var(--line);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+  text-align: center;
+  color: var(--muted);
+  background: var(--paper);
+  transition: border-color 0.15s ease;
+}
+.upload-drop.dragging { border-color: var(--amber); background: #FBF6EC; }
+.upload-drop .file-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  padding: 0.35rem 0.8rem;
+  border-radius: 20px;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+}
+
+.progress-track {
+  display: flex;
+  align-items: center;
+  margin: 2rem 0;
+}
+.progress-step {
+  flex: 1;
+  text-align: center;
+  position: relative;
+}
+.progress-step .dot {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--line);
+  color: var(--muted);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin: 0 auto 0.4rem;
+}
+.progress-step.done .dot { background: var(--success); color: #fff; }
+.progress-step.current .dot { background: var(--amber); color: var(--navy-deep); }
+.progress-step .label { font-size: 0.78rem; color: var(--muted); }
+.progress-step.done .label, .progress-step.current .label { color: var(--ink); font-weight: 600; }
+.progress-step::after {
+  content: "";
+  position: absolute;
+  top: 15px; right: -50%;
+  width: 100%; height: 2px;
+  background: var(--line);
+  z-index: -1;
+}
+.progress-step:last-child::after { display: none; }
+.progress-step.done::after { background: var(--success); }
