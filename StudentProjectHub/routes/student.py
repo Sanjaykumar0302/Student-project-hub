@@ -49,3 +49,21 @@ def downloads():
         .all()
     )
     return render_template("student/downloads.html", projects=projects)
+
+@student_bp.route("/delete-account", methods=["POST"])
+@login_required
+def delete_account():
+    user = User.query.get(current_user.id)
+    
+    # Prevent admins from accidentally deleting their account via student route
+    if user.is_admin:
+        flash("Admin accounts cannot be deleted from here.", "danger")
+        return redirect(url_for("admin.dashboard"))
+
+    # Log out user and delete from database
+    logout_user()
+    db.session.delete(user)
+    db.session.commit()
+    
+    flash("Your account and all associated project data have been permanently deleted.", "info")
+    return redirect(url_for("home.index"))
