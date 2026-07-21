@@ -149,3 +149,17 @@ def settings():
     from models.package import Package
     packages = Package.query.order_by(Package.price).all()
     return render_template("admin/settings.html", packages=packages)
+@admin_bp.route("/students/<int:student_id>/delete", methods=["POST"])
+@login_required
+@admin_required
+def delete_student(student_id):
+    student = User.query.get_or_404(student_id)
+    if student.role == "admin":
+        flash("Cannot delete an admin user.", "danger")
+        return redirect(url_for("admin.students"))
+        
+    db.session.delete(student)
+    db.session.commit()
+    flash("Student account deleted successfully.", "success")
+    return redirect(url_for("admin.students"))
+
