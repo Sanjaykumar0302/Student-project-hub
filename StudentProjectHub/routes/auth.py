@@ -114,3 +114,30 @@ def reset_password(token):
         return redirect(url_for("auth.login"))
 
     return render_template("auth/reset_password.html", form=form)
+
+@auth_bp.cli.command("set-admin")
+def set_admin():
+    """Command to create or update the admin account."""
+    admin_email = "sanjay0302v@gmail.com"  # Set your desired admin email
+    admin_password = "Sanjay@0302V"      # Set your desired admin password
+
+    admin = User.query.filter_by(role="admin").first()
+    if not admin:
+        admin = User.query.filter_by(email=admin_email.lower()).first()
+
+    if not admin:
+        admin = User(
+            name="Admin",
+            email=admin_email.lower(),
+            phone="9380088069",
+            college="LVD College",
+            role="admin"
+        )
+        db.session.add(admin)
+    else:
+        admin.email = admin_email.lower()
+        admin.role = "admin"
+
+    admin.set_password(admin_password)
+    db.session.commit()
+    print(f"Admin updated successfully! Email: {admin.email}")
