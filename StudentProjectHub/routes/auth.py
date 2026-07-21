@@ -141,3 +141,13 @@ def set_admin():
     admin.set_password(admin_password)
     db.session.commit()
     print(f"Admin updated successfully! Email: {admin.email}")
+
+@auth_bp.route("/delete-account", methods=["POST"])
+@login_required
+def delete_account():
+    user = User.query.get(current_user.id)
+    logout_user()  # Log them out first
+    db.session.delete(user)
+    db.session.commit()
+    flash("Your account has been deleted successfully.", "info")
+    return redirect(url_for("home.index"))
