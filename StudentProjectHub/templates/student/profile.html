@@ -32,6 +32,20 @@
         <dd class="col-sm-8">{{ current_user.created_at | date }}</dd>
       </dl>
     </div>
+
+    <!-- Danger Zone / Delete Account Section -->
+    <div class="card-surface p-4 mt-4 border border-danger" style="max-width: 520px; background-color: rgba(220, 53, 69, 0.03);">
+      <h5 class="text-danger mb-2">Danger Zone</h5>
+      <p class="text-muted-custom small mb-3">
+        Deleting your account is permanent. All your submitted project records and notifications will be removed immediately.
+      </p>
+      <form action="{{ url_for('profile.delete') }}" 
+            method="POST" 
+            onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
+        <button type="submit" class="btn btn-danger">Delete My Account</button>
+      </form>
+    </div>
+
   </div>
 </div>
 {% endblock %}
