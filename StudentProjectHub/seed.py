@@ -20,25 +20,26 @@ with app.app_context():
         db.session.add_all([
             Package(
                 name="Basic",
-                price=499,
+                price=3000,
                 description="Just the finished project, ready to submit.",
                 features="Complete project ZIP\nBasic setup instructions",
             ),
             Package(
                 name="Premium",
-                price=999,
-                description="Everything you need for viva and submission.",
+                price=5000,
+                description="Everything you need for submission and viva.",
                 features=(
                     "Complete source code\n"
                     "Project report (PDF)\n"
                     "Presentation (PPT)\n"
-                    "Database file/dump\n"
-                    "Installation guide"
+                    "Disseration\n"
+                    "Synopsis\n"
+                    "viva Questions with Answers"
                 ),
             ),
         ])
         db.session.commit()
-        print("Created default packages: Basic (₹499), Premium (₹999)")
+        print("Created default packages: Basic (₹3000), Premium (₹5000)")
     else:
         print("Packages already exist, skipping.")
 
