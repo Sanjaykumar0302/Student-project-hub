@@ -28,8 +28,6 @@ def edit():
         current_user.college = form.college.data
 
         if form.avatar.data:
-            # avatar stores a ready-to-render URL directly (cloud public URL,
-            # or a /static/... path in local-disk dev mode) - see storage_service.
             current_user.avatar = storage_service.save_public_file(
                 form.avatar.data, f"avatars/user_{current_user.id}", AVATAR_EXTENSIONS
             )
