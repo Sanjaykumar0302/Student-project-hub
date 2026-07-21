@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for, flash
-from flask_login import login_required, current_user
+from flask_login import login_required, logout_user, current_user
 
 from extensions import db
 from forms import ProfileEditForm
@@ -39,3 +39,19 @@ def edit():
         return redirect(url_for("student.dashboard" if not current_user.is_admin else "admin.dashboard"))
 
     return render_template("student/edit_profile.html", form=form)
+
+
+@profile_bp.route("/delete", methods=["POST"])
+@login_required
+def delete():
+    user = current_user
+    if user.is_admin:
+        flash("Admin accounts cannot be self-deleted.", "danger")
+        return redirect(url_for("profile.view"))
+
+    logout_user()
+    db.session.delete(user)
+    db.session.commit()
+
+    flash("Your account has been deleted successfully.", "info")
+    return redirect(url_for("home.index"))
