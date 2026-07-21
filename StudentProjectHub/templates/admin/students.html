@@ -1,53 +1,86 @@
 {% extends "layouts/base.html" %}
-{% block title %}Students - StudentProjectHub Admin{% endblock %}
+{% block title %}Manage Students - Admin Dashboard{% endblock %}
 
 {% block content %}
-<div class="dashboard-layout">
-  {% include "layouts/sidebar.html" %}
-
-  <div class="dashboard-main">
-    <h3 class="mb-4">Students <span class="admin-flag">Admin</span></h3>
-
-    {% if students %}
-    <table class="data-table">
-      <thead>
-        <tr><th>Name</th><th>Email</th><th>Phone</th><th>College</th><th>Projects</th><th>Joined</th></tr>
-      </thead>
-      <tbody>
-        {% for s in students %}
-        <tr>
-          <td class="fw-semibold">{{ s.name }}</td>
-          <td>{{ s.email }}</td>
-          <td>{{ s.phone or "-" }}</td>
-          <td>{{ s.college or "-" }}</td>
-          <td>{{ project_counts.get(s.id, 0) }}</td>
-          <td>{{ s.created_at | date }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-
-    {% if pagination.pages > 1 %}
-    <nav class="d-flex justify-content-between align-items-center mt-3">
-      <span class="text-muted-custom" style="font-size:0.85rem;">
-        Page {{ pagination.page }} of {{ pagination.pages }} ({{ pagination.total }} total)
-      </span>
-      <div class="d-flex gap-2">
-        {% if pagination.has_prev %}
-        <a href="{{ url_for('admin.students', page=pagination.prev_num) }}" class="btn btn-outline-navy btn-sm">← Prev</a>
-        {% endif %}
-        {% if pagination.has_next %}
-        <a href="{{ url_for('admin.students', page=pagination.next_num) }}" class="btn btn-outline-navy btn-sm">Next →</a>
-        {% endif %}
-      </div>
-    </nav>
-    {% endif %}
-    {% else %}
-    <div class="empty-state">
-      <div class="empty-icon">🎓</div>
-      <p>No students have registered yet.</p>
-    </div>
-    {% endif %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Student Accounts</h2>
+    <span class="badge bg-navy">{{ pagination.total }} Total Students</span>
   </div>
+
+  {% if students %}
+  <div class="card shadow-sm border-0">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Student Name</th>
+            <th>Email</th>
+            <th>College</th>
+            <th>Phone</th>
+            <th>Projects Submitted</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for student in students %}
+          <tr>
+            <td>
+              <strong>{{ student.name }}</strong>
+            </td>
+            <td>{{ student.email }}</td>
+            <td>{{ student.college or 'N/A' }}</td>
+            <td>{{ student.phone or 'N/A' }}</td>
+            <td>
+              <span class="badge bg-secondary">
+                {{ project_counts.get(student.id, 0) }}
+              </span>
+            </td>
+            <td class="text-end">
+              <!-- Delete Account Button Form -->
+              <form action="{{ url_for('admin.delete_student', student_id=student.id) }}" 
+                    method="POST" 
+                    class="d-inline" 
+                    onsubmit="return confirm('Are you sure you want to delete {{ student.name }}? This will permanently remove their account.');">
+                <button type="submit" class="btn btn-sm btn-outline-danger">
+                  Delete
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Pagination Controls -->
+  {% if pagination.pages > 1 %}
+  <nav class="mt-4">
+    <ul class="pagination justify-content-center">
+      {% if pagination.has_prev %}
+        <li class="page-item">
+          <a class="page-link" href="{{ url_for('admin.students', page=pagination.prev_num) }}">Previous</a>
+        </li>
+      {% endif %}
+      
+      <li class="page-item disabled">
+        <span class="page-link">Page {{ pagination.page }} of {{ pagination.pages }}</span>
+      </li>
+
+      {% if pagination.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="{{ url_for('admin.students', page=pagination.next_num) }}">Next</a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+
+  {% else %}
+  <div class="alert alert-info text-center py-4">
+    No student accounts found.
+  </div>
+  {% endif %}
 </div>
 {% endblock %}
