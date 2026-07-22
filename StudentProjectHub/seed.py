@@ -22,7 +22,7 @@ with app.app_context():
                 name="Basic",
                 price=3000,
                 description="Just the finished project, ready to submit.",
-                features="Complete project ZIP\nBasic setup instructions",
+                features="Complete project ZIP\nBasic setup instructions\n Synopsis\n Viva Questions with Answers",
             ),
             Package(
                 name="Premium",
