@@ -34,7 +34,7 @@ with app.app_context():
                     "Presentation (PPT)\n"
                     "Disseration\n"
                     "Synopsis\n"
-                    "viva Questions with Answers"
+                    "CD\n""viva Questions with Answers"
                 ),
             ),
         ])
